@@ -4,7 +4,8 @@
 
 import firebase from "./firebase";
 
-import { getDatabase, push, ref, set } from "firebase/database";
+import { getDatabase, onValue, push, ref, set } from "firebase/database";
+import { useEffect, useState } from "react";
 
 
 export const addInfoToDatabase = (info) => {
@@ -17,5 +18,27 @@ export const addInfoToDatabase = (info) => {
   //   gender:info.gender
   // })
   set(newUserRef,info)
+}
+
+export const useFetch = () =>{
+  const [isLoading, setIsLoading] = useState();
+  const [contactList, setContactList] = useState();
+  
+  useEffect(() => {
+    setIsLoading(true);
+
+    const db = getDatabase();
+    const userRef = ref(db,"/ContactInfoDB");
+    onValue(userRef, (snapshot) => {
+      const data = snapshot.val();
+      const arrayData = [];
+      for (let id in data) {
+        arrayData.push(id, ...data[id])
+      }
+      setContactList(arrayData);
+      setIsLoading(false);
+    });
+  }, []);
+ return {isLoading, contactList};
 }
 

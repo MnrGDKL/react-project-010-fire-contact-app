@@ -3,11 +3,12 @@ import FormComponent from './components/form/FormComponent';
 import Contacts from "./components/contacts/Contacts"
 import { useState } from 'react';
 import { addInfoToDatabase, editInfoInDatabase } from './utils/functions';
+import { ToastContainer } from "react-toastify";
 
 const initialInfo = {
   username: "",
   phoneNumber: "",
-  gender: ""
+  gender: "NO INFO"
 }
 
 function App() {
@@ -21,14 +22,15 @@ function App() {
     else {addInfoToDatabase(info)}
     setInfo(initialInfo);
   }
-  const editHandler = (id, {username, phoneNumber,gender}) => {
-    setInfo(id, username, phoneNumber, gender)
+  const editHandler = (id, username, phoneNumber,gender) => {
+    setInfo({id, username, phoneNumber, gender})
   }
 
   return (
     <div className="App">
       <FormComponent info={info} setInfo={setInfo} handleFormSubmit={handleFormSubmit}/>
-      <Contacts info={info} editHandler={editHandler}/>
+      <Contacts editHandler={editHandler}/>
+      <ToastContainer/>
     </div>
   );
 }
